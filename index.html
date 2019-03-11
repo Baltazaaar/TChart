@@ -61,14 +61,18 @@
         <button class="joined">Joined</button>
         <button class="left">Left</button>
       </div>
-      <div>
-      <button class="Night"> Night Mode</button> 
-      </div>
+     <a href="#">
+    <span></span>
+    <span></span>
+    <span></span>
+    <span></span>
+    Night Mode
+    </a>
     </div>
 
     <style>
       .joined {
-        border: 1px solid black;
+        border: 1px solid rgb(3, 153, 3);
         border-radius: 48px;
         padding: 0px 16px;
         font: inherit;
@@ -82,7 +86,7 @@
         border-color: white;
       }
       .left {
-        border: 1px solid black;
+        border: 1px solid rgb(153,0,0);
         border-radius: 48px;
         padding: 0px 16px;
         font: inherit;
@@ -95,28 +99,78 @@
         color: white;
         border-color: white;
       }
-      .Night { 
-        border: 1px solid rgb(235,223,178);
-        border-radius: 48px;
-        padding: 0px 16px;
-        font: inherit;
-        background-color: inherit;
-        color: rgb(0,165,80);
-      }
-      .Night:hover {
-        background-color: rgb(25, 35, 74);
-        cursor: pointer;
-        color:rgb(121, 211, 252);
-        border-color:rgb(121, 211, 252);
-      }
+      a {
+    position: absolute;
+    border-radius: 48px;
+    top: 111%;
+    left: 29%;
+    transform: translate(-50%, -50%);
+    width: 180px;
+    height: 30px;
+    text-align: center;
+    line-height: 30px;
+    text-decoration: none;
+    text-transform: uppercase;
+    letter-spacing: 6px;
+    border: 2px solid rgb(235,223,178);
+    font-size: 12px;
+    color: rgb(0,165,80);
+    transition: 0.2s;
+    overflow: hidden;
+  }
+  a:hover {
+    color:rgb(121, 211, 252);
+    border: 2px solid white;
+  }
+  a span {
+    position: absolute;
+    width: 100%;
+    height: 100%;
+    background: rgb(25, 35, 74);
+    transition: 1s;
+    z-index: -1;
+  }
+  a span:nth-child(1) {
+    top: -100%;
+    left: -100%;
+  }
+  a:hover span:nth-child(1) {
+    top: 0;
+    left: 0;
+  }
+  a span:nth-child(2) {
+    bottom: -100%;
+    left: -100%;
+  }
+  a:hover span:nth-child(2) {
+    bottom: 0;
+    left: 0;
+  }
+  a span:nth-child(3) {
+    top: -100%;
+    right: -100%;
+  }
+  a:hover span:nth-child(3) {
+    top: 0;
+    right: 0;
+  }
+  a span:nth-child(4) {
+    bottom: -100%;
+    right: -100%;
+  }
+  a:hover span:nth-child(4) {
+    bottom: 0;
+    right: 0;
+  }
+      
       .chart {
-        border: 1px solid black;
+        border: 1px solid rgb(0,165,80) ;
       }
       .slider {
-        border: 1px solid black;
+        border: 1px solid rgb(0, 165, 80) ;
       }
       body {
-        font-family: sans-serif;
+        font-family: verdana;
         font-size: 20px;
         font-weight: 900;
         color: rgb(0,165,80);
