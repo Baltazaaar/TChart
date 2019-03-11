@@ -1,0 +1,127 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>TChart</title>
+    <script type="text/javascript">
+      const drawChart = () => {
+        const canvas = document.querySelector('.chart');
+        if (canvas.getContext) {
+          const ctx = canvas.getContext('2d');
+          ctx.lineWidth = 2;
+
+          for (let i = 1; i < 7; i++) {
+            ctx.beginPath();
+            ctx.moveTo(0, i * 100);
+            ctx.lineTo(500, i * 100);
+            ctx.stroke();
+          }
+        }
+      };
+
+      const firstDataArray = [34, 77, 43, 54, 78, 99, 45, 66 , 78, 55, 67];
+      const secondDataArray = [23, 11, 65, 87, 45, 34, 75, 98 , 23, 67, 45];
+
+      const drawSlider = () => {
+        const canvas = document.querySelector('.slider');
+        if (canvas.getContext) {
+          const ctx = canvas.getContext('2d');
+          ctx.lineWidth = 2;
+
+          ctx.strokeStyle = 'rgb(255, 0, 0)';
+          ctx.beginPath();
+          ctx.moveTo(0, firstDataArray[0]);
+          for (let i = 1; i < firstDataArray.length; i++) {
+            ctx.lineTo(i * 50, 100 - firstDataArray[i]);
+          };
+          ctx.stroke();
+
+          ctx.strokeStyle = 'rgb(0,128, 0)';
+          ctx.beginPath();
+          ctx.moveTo(0, secondDataArray[0]);
+          for (let i = 1; i < secondDataArray.length; i++) {
+            ctx.lineTo(i * 50, 100 - secondDataArray[i]);
+          };
+
+          ctx.stroke();
+        }
+      };
+    </script>
+  </head>
+  <body onload="drawChart(); drawSlider();">
+    <div class="container">
+      <div>Followers</div>
+      <div>
+        <canvas class="chart" width="500" height="700"></canvas>
+      </div>
+      <div>
+        <canvas class="slider" width="500" height="100"></canvas>
+      </div>
+      <div>
+        <button class="joined">Joined</button>
+        <button class="left">Left</button>
+      </div>
+      <div>
+      <button class="Night"> Night Mode</button> 
+      </div>
+    </div>
+
+    <style>
+      .joined {
+        border: 1px solid black;
+        border-radius: 48px;
+        padding: 0px 16px;
+        font: inherit;
+        background-color: inherit;
+        color: rgb(3, 153, 3);
+      }
+      .joined:hover {
+        background-color: rgb(66,255,158);
+        cursor: pointer;
+        color: white;
+        border-color: white;
+      }
+      .left {
+        border: 1px solid black;
+        border-radius: 48px;
+        padding: 0px 16px;
+        font: inherit;
+        background-color: inherit;
+        color: rgb(153,0,0);
+      }
+      .left:hover {
+        background-color: rgb(255,51,51);
+        cursor: pointer;
+        color: white;
+        border-color: white;
+      }
+      .Night { 
+        border: 1px solid rgb(25, 35, 74);
+        border-radius: 48px;
+        padding: 0px 16px;
+        font: inherit;
+        background-color: inherit;
+        color: rgb(121, 211, 252);
+      }
+      .Night:hover {
+        background-color: rgb(235,223,178);
+        cursor: pointer;
+        color: rgb(0,165,80);
+        border-color:rgb(0,165,80);
+      }
+      .chart {
+        border: 1px solid black;
+      }
+      .slider {
+        border: 1px solid black;
+      }
+      body {
+        font-family: sans-serif;
+        font-size: 20px;
+        font-weight: 900;
+        color: rgb(121, 211, 252);
+        background-color: rgb(25, 35, 74);
+      }
+    </style>
+  </body>
+</html>
