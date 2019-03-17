@@ -4,11 +4,17 @@
     <meta charset="utf-8">
     <title>TChart</title>
     <script type="text/javascript">
+      let nightMode = false;
+
+      const firstDataArray = [34, 77, 43, 54, 78, 99, 45, 66 , 78, 55, 67];
+      const secondDataArray = [56, 68, 65, 87, 45, 34, 75, 98 , 23, 67, 45];
+
       const drawChart = () => {
         const canvas = document.querySelector('.chart');
         if (canvas.getContext) {
           const ctx = canvas.getContext('2d');
-          ctx.lineWidth = 2;
+          ctx.lineWidth = 1;
+          ctx.strokeStyle = '#b6b3ef';
 
           for (let i = 1; i < 7; i++) {
             ctx.beginPath();
@@ -16,20 +22,36 @@
             ctx.lineTo(500, i * 100);
             ctx.stroke();
           }
+
+          ctx.lineWidth = 2;
+          ctx.strokeStyle = 'rgb(255, 0, 0)';
+          ctx.beginPath();
+          ctx.moveTo(0, 700 - firstDataArray[0] * 7);
+          for (let i = 1; i < firstDataArray.length; i++) {
+            ctx.lineTo(i * 50, 700 - firstDataArray[i] * 7);
+          };
+          ctx.stroke();
+
+          ctx.strokeStyle = 'rgb(0,128, 0)';
+          ctx.beginPath();
+          ctx.moveTo(0, 700 - secondDataArray[0] * 7);
+          for (let i = 1; i < secondDataArray.length; i++) {
+            ctx.lineTo(i * 50, 700 - secondDataArray[i] * 7);
+          };
+
+          ctx.stroke();
         }
       };
-      const firstDataArray = [34, 77, 43, 54, 78, 99, 45, 66 , 78, 55, 67];
-      const secondDataArray = [23, 11, 65, 87, 45, 34, 75, 98 , 23, 67, 45];
 
       const drawSlider = () => {
-        const canvas = document.querySelector('.slider');
+        const canvas = document.querySelector('.slider-canvas');
         if (canvas.getContext) {
           const ctx = canvas.getContext('2d');
           ctx.lineWidth = 2;
 
           ctx.strokeStyle = 'rgb(255, 0, 0)';
           ctx.beginPath();
-          ctx.moveTo(0, firstDataArray[0]);
+          ctx.moveTo(0, 100 - firstDataArray[0]);
           for (let i = 1; i < firstDataArray.length; i++) {
             ctx.lineTo(i * 50, 100 - firstDataArray[i]);
           };
@@ -37,7 +59,7 @@
 
           ctx.strokeStyle = 'rgb(0,128, 0)';
           ctx.beginPath();
-          ctx.moveTo(0, secondDataArray[0]);
+          ctx.moveTo(0, 100 - secondDataArray[0]);
           for (let i = 1; i < secondDataArray.length; i++) {
             ctx.lineTo(i * 50, 100 - secondDataArray[i]);
           };
@@ -45,6 +67,16 @@
           ctx.stroke();
         }
       };
+
+      const switchNight = () => {
+        if (!nightMode) {
+          document.getElementById("style").href = "night.css";
+          nightMode = !nightMode;
+        } else {
+          document.getElementById("style").href = "day.css";
+          nightMode = !nightMode;
+        }
+      }
     </script>
   </head>
   <body onload="drawChart(); drawSlider();">
@@ -54,19 +86,16 @@
         <canvas class="chart" width="500" height="700"></canvas>
       </div>
       <div>
-        <canvas class="slider" width="500" height="100"></canvas>
+        <canvas class="slider-canvas" width="500" height="100"></canvas>
       </div>
-      <div>
-        <button class="joined">Joined</button>
-        <button class="left">Left</button>
+      <div style="display: flex; flex-direction: row">
+        <a class="joined">Joined</a>
+        <a class="left">Left</a>
+        <label class="switch">
+          <input type="checkbox" onchange="switchNight();">
+          <span class="slider round"></span>
+        </label>
       </div>
-     <a href="#">
-    <span></span>
-    <span></span>
-    <span></span>
-    <span></span>
-    Night Mode
-    </a>
     </div>
 
     <style>
@@ -98,83 +127,81 @@
         color: white;
         border-color: white;
       }
-      a {
-    position: absolute;
-    border-radius: 48px;
-    top: 107%;
-    left: 29%;
-    transform: translate(-50%, -50%);
-    width: 180px;
-    height: 30px;
-    text-align: center;
-    line-height: 30px;
-    text-decoration: none;
-    text-transform: uppercase;
-    letter-spacing: 6px;
-    border: 2px solid rgb(235,223,178);
-    font-size: 12px;
-    color: rgb(0,165,80);
-    transition: 0.2s;
-    overflow: hidden;
-  }
-  a:hover {
-    color:rgb(121, 211, 252);
-    border: 2px solid white;
-  }
-  a span {
-    position: absolute;
-    width: 100%;
-    height: 100%;
-    background: rgb(25, 35, 74);
-    transition: 1s;
-    z-index: -1;
-  }
-  a span:nth-child(1) {
-    top: -100%;
-    left: -100%;
-  }
-  a:hover span:nth-child(1) {
-    top: 0;
-    left: 0;
-  }
-  a span:nth-child(2) {
-    bottom: -100%;
-    left: -100%;
-  }
-  a:hover span:nth-child(2) {
-    bottom: 0;
-    left: 0;
-  }
-  a span:nth-child(3) {
-    top: -100%;
-    right: -100%;
-  }
-  a:hover span:nth-child(3) {
-    top: 0;
-    right: 0;
-  }
-  a span:nth-child(4) {
-    bottom: -100%;
-    right: -100%;
-  }
-  a:hover span:nth-child(4) {
-    bottom: 0;
-    right: 0;
-  }
+      /* The switch - the box around the slider */
+      .switch {
+        position: relative;
+        display: inline-block;
+        width: 60px;
+        height: 34px;
+      }
+
+      /* Hide default HTML checkbox */
+      .switch input {
+        opacity: 0;
+        width: 0;
+        height: 0;
+      }
+
+      /* The slider */
+      .slider {
+        position: absolute;
+        cursor: pointer;
+        top: 0;
+        left: 0;
+        right: 0;
+        bottom: 0;
+        background-color: #b6b3ef;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      .slider:before {
+        position: absolute;
+        content: "";
+        height: 26px;
+        width: 26px;
+        left: 4px;
+        bottom: 4px;
+        background-color: #19234A;
+        -webkit-transition: .4s;
+        transition: .4s;
+      }
+
+      input:checked + .slider {
+        background-color:rgb(121, 211, 252);
+      }
+
+      input:focus + .slider {
+        box-shadow: 0 0 1px #2196F3;
+      }
+
+      input:checked + .slider:before {
+        -webkit-transform: translateX(26px);
+        -ms-transform: translateX(26px);
+        transform: translateX(26px);
+      }
+
+      /* Rounded sliders */
+      .slider.round {
+        border-radius: 34px;
+      }
+
+      .slider.round:before {
+        border-radius: 50%;
+      }
 
       .chart {
-        border: 1px solid rgb(0,165,80) ;
+        border: 1px solid rgb(0,165,80);
       }
-      .slider {
-        border: 1px solid rgb(0, 165, 80) ;
+      .slider-canvas {
+        border: 1px solid rgb(0,165,80);
       }
       body {
         font-family: verdana;
         font-size: 20px;
         font-weight: 900;
-        color: rgb(0,165,80);
-        background-color: rgb(235,223,178);
       }
     </style>
+    <link id="style" rel="stylesheet" type="text/css" href="day.css" />
   </body>
 </html>
