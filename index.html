@@ -3,99 +3,190 @@
   <head>
     <meta charset="utf-8">
     <title>TChart</title>
+    <script type="text/javascript" src="chart_data.json"></script>
     <script type="text/javascript">
       let nightMode = false;
 
-      const firstDataArray = [34, 77, 43, 54, 78, 99, 45, 66 , 78, 55, 67];
-      const secondDataArray = [56, 68, 65, 87, 45, 34, 75, 98 , 23, 67, 45];
+      const drawChart = (number, canvasClass) => {
+        const xArr = DATA[number].columns[0];
+        xArr.shift();
+        const firstColor = DATA[number].colors['y0'];
+        const y0Arr = DATA[number].columns[1];
+        y0Arr.shift();
+        const secondColor = DATA[number].colors['y1'];
+        const y1Arr = DATA[number].columns[2];
+        y1Arr.shift();
+        const thirdColor = DATA[number].colors['y2'];
+        const y2Arr = DATA[number].columns[3];
+        y2Arr && y2Arr.shift();
+        const fourthColor = DATA[number].colors['y3'];
+        const y3Arr = DATA[number].columns[4];
+        y3Arr && y3Arr.shift();
+        const maxY = Math.max(...y0Arr);
 
-      const drawChart = () => {
-        const canvas = document.querySelector('.chart');
+        const parseDate = timestamp => `${new Date(timestamp).getDay() + 1} ${parseMonth(new Date(timestamp).getMonth() + 1)} ${new Date(timestamp).getFullYear()}`;
+        const parseMonth = month => {
+          switch (month) {
+            case 1: return 'Jan';
+            case 2: return 'Feb';
+            case 3: return 'Mar';
+            case 4: return 'Apr';
+            case 5: return 'May';
+            case 6: return 'Jun';
+            case 7: return 'Jul';
+            case 8: return 'Aug';
+            case 9: return 'Sep';
+            case 10: return 'Oct';
+            case 11: return 'Nov';
+            case 12: return 'Dec';
+            default: return 'Month';
+          }
+        };
+
+        const canvas = document.querySelector(canvasClass);
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+        const heightOffset = 100;
+        const widthOffset = 100;
+        const delNumbers = height / heightOffset;
+
+        if (canvas.getContext) {
+          const ctx = canvas.getContext('2d');
+          ctx.lineWidth = 1;
+          ctx.font = 'small-caps bold 12px verdana';
+          ctx.strokeStyle = '#b6b3ef';
+
+          ctx.fillStyle = '#b6b3ef';
+          ctx.fillText(maxY, 5, 10);
+          ctx.fillText("0", 5, height - 5);
+          for (let i = 1; i < height / heightOffset; i++) {
+            ctx.beginPath();
+            ctx.moveTo(0, i * heightOffset);
+            ctx.lineTo(width, i * heightOffset);
+            ctx.stroke();
+            ctx.fillText(Math.round(maxY / delNumbers * (delNumbers - i)), 5, i * heightOffset - 2);
+          }
+          for (let i = 1; i < width / widthOffset; i++) {
+            ctx.fillText(parseDate(xArr[Math.round(i * xArr.length / 5)]), i * widthOffset, height - 5);
+          }
+
+          const drawLine = (line, color) => {
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = color;
+            ctx.beginPath();
+            ctx.moveTo(0, height - line[0] * (height / maxY));
+            for (let i = 1; i < xArr.length; i++) {
+              ctx.lineTo(i * (width / xArr.length), height - line[i] * (height / maxY));
+            };
+            ctx.stroke();
+          };
+
+          drawLine(y0Arr, firstColor);
+          drawLine(y1Arr, secondColor);
+          y2Arr && drawLine(y2Arr, thirdColor);
+          y3Arr && drawLine(y3Arr, fourthColor);
+        }
+      };
+
+      const drawSlider = (number, canvasClass) => {
+
+        const xArr = DATA[number].columns[0];
+        xArr.shift();
+        const firstColor = DATA[number].colors['y0'];
+        const y0Arr = DATA[number].columns[1];
+        y0Arr.shift();
+        const secondColor = DATA[number].colors['y1'];
+        const y1Arr = DATA[number].columns[2];
+        y1Arr.shift();
+        const thirdColor = DATA[number].colors['y2'];
+        const y2Arr = DATA[number].columns[3];
+        y2Arr && y2Arr.shift();
+        const fourthColor = DATA[number].colors['y3'];
+        const y3Arr = DATA[number].columns[4];
+        y3Arr && y3Arr.shift();
+        const max = Math.max(...y0Arr);
+
+        const canvas = document.querySelector(canvasClass);
+        const width = canvas.clientWidth;
+        const height = canvas.clientHeight;
+
         if (canvas.getContext) {
           const ctx = canvas.getContext('2d');
           ctx.lineWidth = 1;
           ctx.strokeStyle = '#b6b3ef';
 
-          for (let i = 1; i < 7; i++) {
+          const drawLine = (line, color) => {
+            ctx.lineWidth = 2;
+            ctx.strokeStyle = color;
             ctx.beginPath();
-            ctx.moveTo(0, i * 100);
-            ctx.lineTo(500, i * 100);
+            ctx.moveTo(0, height - line[0] * (height / max));
+            for (let i = 1; i < xArr.length; i++) {
+              ctx.lineTo(i * (width / xArr.length), height - line[i] * (height / max));
+            };
             ctx.stroke();
-          }
-
-          ctx.lineWidth = 2;
-          ctx.strokeStyle = 'rgb(255, 0, 0)';
-          ctx.beginPath();
-          ctx.moveTo(0, 700 - firstDataArray[0] * 7);
-          for (let i = 1; i < firstDataArray.length; i++) {
-            ctx.lineTo(i * 50, 700 - firstDataArray[i] * 7);
-          };
-          ctx.stroke();
-
-          ctx.strokeStyle = 'rgb(0,128, 0)';
-          ctx.beginPath();
-          ctx.moveTo(0, 700 - secondDataArray[0] * 7);
-          for (let i = 1; i < secondDataArray.length; i++) {
-            ctx.lineTo(i * 50, 700 - secondDataArray[i] * 7);
           };
 
-          ctx.stroke();
-        }
-      };
-
-      const drawSlider = () => {
-        const canvas = document.querySelector('.slider-canvas');
-        if (canvas.getContext) {
-          const ctx = canvas.getContext('2d');
-          ctx.lineWidth = 2;
-
-          ctx.strokeStyle = 'rgb(255, 0, 0)';
-          ctx.beginPath();
-          ctx.moveTo(0, 100 - firstDataArray[0]);
-          for (let i = 1; i < firstDataArray.length; i++) {
-            ctx.lineTo(i * 50, 100 - firstDataArray[i]);
-          };
-          ctx.stroke();
-
-          ctx.strokeStyle = 'rgb(0,128, 0)';
-          ctx.beginPath();
-          ctx.moveTo(0, 100 - secondDataArray[0]);
-          for (let i = 1; i < secondDataArray.length; i++) {
-            ctx.lineTo(i * 50, 100 - secondDataArray[i]);
-          };
-
-          ctx.stroke();
+          drawLine(y0Arr, firstColor);
+          drawLine(y1Arr, secondColor);
+          y2Arr && drawLine(y2Arr, thirdColor);
+          y3Arr && drawLine(y3Arr, fourthColor);
         }
       };
 
       const switchNight = () => {
         if (!nightMode) {
-          document.getElementById("style").href = "night.css";
+          document.querySelector('#style').href = 'night.css';
+          document.querySelector('.day-night').textContent = 'SWITCH TO DAY MODE';
           nightMode = !nightMode;
         } else {
-          document.getElementById("style").href = "day.css";
+          document.querySelector('#style').href = 'day.css';
+          document.querySelector('.day-night').textContent = 'SWITCH TO NIGHT MODE';
           nightMode = !nightMode;
         }
       }
     </script>
   </head>
-  <body onload="drawChart(); drawSlider();">
+  <body>
     <div class="container">
-      <div>Followers</div>
-      <div>
-        <canvas class="chart" width="500" height="700"></canvas>
+      <div class="header">Followers</div>
+      <div class="content">
+        <canvas class="chart-canvas firstChart" width="500" height="700"></canvas>
+        <script>drawChart(0, '.firstChart')</script>
+        <canvas class="slider-canvas firstSlider" width="500" height="100"></canvas>
+        <script>drawSlider(0, '.firstSlider')</script>
+
+        <canvas class="chart-canvas secondChart" width="500" height="700"></canvas>
+        <script>drawChart(1, '.secondChart')</script>
+        <canvas class="slider-canvas secondSlider" width="500" height="100"></canvas>
+        <script>drawSlider(1, '.secondSlider')</script>
+
+        <canvas class="chart-canvas thirdChart" width="500" height="700"></canvas>
+        <script>drawChart(2, '.thirdChart')</script>
+        <canvas class="slider-canvas thirdSlider" width="500" height="100"></canvas>
+        <script>drawSlider(2, '.thirdSlider')</script>
+
+        <canvas class="chart-canvas fourthChart" width="500" height="700"></canvas>
+        <script>drawChart(3, '.fourthChart')</script>
+        <canvas class="slider-canvas fourthSlider" width="500" height="100"></canvas>
+        <script>drawSlider(3, '.fourthSlider')</script>
+
+        <canvas class="chart-canvas fifthChart" width="500" height="700"></canvas>
+        <script>drawChart(4, '.fifthChart')</script>
+        <canvas class="slider-canvas fifthSlider" width="500" height="100"></canvas>
+        <script>drawSlider(4, '.fifthSlider')</script>
       </div>
-      <div>
-        <canvas class="slider-canvas" width="500" height="100"></canvas>
-      </div>
-      <div style="display: flex; flex-direction: row">
-        <a class="joined">Joined</a>
-        <a class="left">Left</a>
-        <label class="switch">
-          <input type="checkbox" onchange="switchNight();">
-          <span class="slider round"></span>
-          <div class="Night"><nobr>SWITCH TO NIGHT MODE</nobr></div>
-        </label>
+      <div class="footer">
+        <div class="buttons">
+          <a class="joined">Joined</a>
+          <a class="left">Left</a>
+        </div>
+        <div class="switcher">
+          <label class="switch">
+            <input type="checkbox" onchange="switchNight();">
+            <span class="slider round"></span>
+          </label>
+          <span class="day-night">SWITCH TO NIGHT MODE</span>
+        </div>
       </div>
     </div>
 
@@ -128,7 +219,6 @@
         color: white;
         border-color: white;
       }
-      /* The switch - the box around the slider */
       .switch {
         position: relative;
         margin:2px 3px;
@@ -136,15 +226,11 @@
         width: 60px;
         height: 34px;
       }
-
-      /* Hide default HTML checkbox */
       .switch input {
         opacity: 0;
         width: 0;
         height: 0;
       }
-
-      /* The slider */
       .slider {
         position: absolute;
         cursor: pointer;
@@ -156,7 +242,6 @@
         -webkit-transition: .4s;
         transition: .4s;
       }
-
       .slider:before {
         position: absolute;
         content: "";
@@ -168,41 +253,66 @@
         -webkit-transition: .4s;
         transition: .4s;
       }
-
       input:checked + .slider {
         background-color:rgb(121, 211, 252);
       }
-
       input:focus + .slider {
         box-shadow: 0 0 1px #2196F3;
       }
-
       input:checked + .slider:before {
         -webkit-transform: translateX(26px);
         -ms-transform: translateX(26px);
         transform: translateX(26px);
       }
-
-      /* Rounded sliders */
       .slider.round {
         border-radius: 34px;
       }
-
       .slider.round:before {
         border-radius: 50%;
       }
-
-      .chart {
+      .chart-canvas {
         border: 1px solid rgb(0,165,80);
+        max-width: 100%;
+        height: auto;
+        margin-top: 1em;
+        margin-bottom: 1em;
       }
       .slider-canvas {
         border: 1px solid rgb(0,165,80);
+        max-width: 100%;
+        height: auto;
       }
-      .Night{
-      	margin: -25px 67px ;
-		  
+      .container {
+        display: flex;
+        flex-direction: column;
       }
-
+      .header {
+        display: flex;
+        flex-direction: column;
+        margin: auto;
+      }
+      .content {
+        display: flex;
+        flex-direction: column;
+        max-width: 500px;
+        margin: auto;
+        margin-bottom: 1em;
+      }
+      .footer {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        margin: auto;
+      }
+      .buttons {
+        display: flex;
+        flex-direction: row;
+      }
+      .switcher {
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+      }
       body {
         font-family: verdana;
         font-size: 20px;
